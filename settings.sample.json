@@ -1,0 +1,16 @@
+{
+    "cdash_base_url": "http://cdash...",
+    "cdash_api_url": "http://cdash.../api/v1",
+    "cdash_token": "",
+    
+    "project": {
+        "documentation_url": "http://.../{0}/.../index.html",
+        "home_url": "https://.../.../{0}",
+        "cvs_url": "ssh://...@...:1234/.../{0}.git",
+        "bug_tracker_type": "",
+        "bug_tracker_url": "https://.../.../{0}/-/issues",
+        "bug_tracker_new_issue_url": "https://.../.../{0}/-/issues/new",
+        "issue_creation": true,
+        "cvs_viewer_type": "gitlab"
+    }
+}
