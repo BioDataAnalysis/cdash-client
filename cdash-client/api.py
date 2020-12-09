@@ -8,7 +8,7 @@ def create_project(session, args):
         "Submit": True,
         "project": _args_to_project(args)
     }
-    response = session.post(f"{config['cdash_api_url']}/project.php", json=payload)
+    response = session.post(f"{config['cdash_base_url']}{config['cdash_api_endpoint']}/project.php", json=payload)
 
     project_created = response.status_code == 200
 
@@ -16,7 +16,7 @@ def create_project(session, args):
         raise Exception(f"The project {args.project_name} already exists")
 
 def get_project_id(session, project_name):
-    response = session.get(f"{config['cdash_api_url']}/index.php?project={project_name}")
+    response = session.get(f"{config['cdash_base_url']}{config['cdash_api_endpoint']}/index.php?project={project_name}")
 
     if response.status_code != 200:
         raise Exception(f"Could not get the data from the project {project_name}. Maybe it doesn't exist?")
@@ -83,12 +83,18 @@ def add_project_users(session, args: list):
             # Currently ignored by the API, as it will not return a different status code if something went wrong
             raise Exception(f"The user {userid} could not be added to the project. Maybe it's missing?")
 
-def login(email, password):
+def login():
     session = requests.Session()
 
     response = session.get(f"{config['cdash_base_url']}/login")
 
     login_token = re.findall('<meta name="csrf-token" content="(.*)" \\/>', response.text)[0]
+
+    email = config['cdash_login_email']
+    password = config['cdash_login_password']
+
+    if not email or not password:
+        raise Exception("Incomplete credentials given")
 
     payload = {
         "email": email,

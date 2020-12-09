@@ -6,11 +6,9 @@ from . import api
 def main():
 
     parser = argparse.ArgumentParser(description="Create a new CDash project")
-    parser
-    parser.add_argument("--login_email", type=str, help="Login email", required=True)
-    parser.add_argument("--login_password", type=str, help="Login password", required=True)
 
-    # TODO: CDash API currently does not work with API tokens.
+    # TODO : CDash API currently does not work with API tokens, so we have to
+    # use regular email-password sessions.
     # parser.add_argument("--login_token", type=str, help="Token", required=True)
 
     parser.add_argument("--create_project", help="Creates a project", action="store_true")
@@ -32,7 +30,7 @@ def main():
 
     args = parser.parse_args()
 
-    session = api.login(args.login_email, args.login_password)
+    session = api.login()
 
     if not session:
         sys.exit("Error while loggin in: the credentials are wrong")

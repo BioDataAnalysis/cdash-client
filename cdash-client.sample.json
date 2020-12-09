@@ -1,6 +1,6 @@
 {
     "cdash_base_url": "http://cdash...",
-    "cdash_api_url": "http://cdash.../api/v1",
+    "cdash_api_endpoint": "/api/v1",
     "cdash_token": "",
     "cdash_login_email": "my@email.com",
     "cdash_login_password": "",
@@ -13,6 +13,7 @@
         "bug_tracker_url": "https://.../.../{0}/-/issues",
         "bug_tracker_new_issue_url": "https://.../.../{0}/-/issues/new",
         "issue_creation": true,
-        "cvs_viewer_type": "gitlab"
+        "cvs_viewer_type": "gitlab",
+        "public": true
     }
 }

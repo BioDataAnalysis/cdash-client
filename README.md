@@ -27,8 +27,8 @@ Following we will explain how these settings are being used to access the CDash 
 `cdash_base_url`: Accepts an URL pointing to your CDash installation. No trailing slash.
 Example: `https://your.domain`
 
-`cdash_api_url`: Accepts an URL pointing to your CDash API endpoint. Typically, it's the same as `cdash_base_url`, with `/api/v1` to the end.
-Example: `https://your.domain/api/v1`
+`cdash_api_endpoint`: Accepts a folder pointing to your CDash API endpoint. Typically it's `/api/v1`. This will be appended to the end of `cdash_base_url`.
+Example: `/api/v1`
 
 `cdash_token`: Currently unused. CDash does not fully support the use of tokens for API calls, so we have to skip it for now.
 
