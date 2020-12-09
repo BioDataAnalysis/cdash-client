@@ -3,7 +3,7 @@ import os
 
 config = {}
 
-settings_file_wd = f"{os.getcwd()}/settings.json"
+settings_file_wd = f"{os.getcwd()}/cdash-client.json"
 home_directory = os.path.expanduser("~")
 settings_file_home = f"{home_directory}/cdash-client.json"
 settings_file = ""

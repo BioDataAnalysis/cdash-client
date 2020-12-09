@@ -2,7 +2,9 @@
     "cdash_base_url": "http://cdash...",
     "cdash_api_url": "http://cdash.../api/v1",
     "cdash_token": "",
-    
+    "cdash_login_email": "my@email.com",
+    "cdash_login_password": "",
+
     "project": {
         "documentation_url": "http://.../{0}/.../index.html",
         "home_url": "https://.../.../{0}",
