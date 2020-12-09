@@ -4,7 +4,7 @@ CDash is an open source, web-based software testing server. It can be used to ag
 
 But setting up a plethora of projects or users in CDash can be a tedious task to do.
 
-The CDash API Client `cdash-client` is a simple Python 3.x command line tool that can aid in this process.
+The CDash API Client `cdash-client` is a simple Python 2.x command line tool that can aid in this process.
 
 # Installation
 
@@ -13,9 +13,9 @@ Currently no installation necessary. All functionality is bundled within a singl
 # Setup
 
 ```
-    $ git clone git@github.com:BioDataAnalysis/cdash-client.git
-    $ cp settings.sample.json settings.json
-    $ vim settings.json
+    $ git clone https://github.com/BioDataAnalysis/cdash-client.git
+    $ cp .cdash-client.sample.json .cdash-client.json
+    $ vim .cdash-client.json
 ```
 
 # Configuration
@@ -32,6 +32,10 @@ Example: `/api/v1`
 
 `cdash_token`: Currently unused. CDash does not fully support the use of tokens for API calls, so we have to skip it for now.
 
+`cdash_login_email`: The email to login with CDash with. The user must be allowed to create projects.
+
+`cdash_login_password`: The password to login with CDash with.
+
 `project`: An object of several properties useful for the creation of a project.
 
 `project.documentation_url`: Accepts an URL which points at your projects documentation URL. It supports string formatting with the project's name as the only parameter.
@@ -47,11 +51,12 @@ Example: `ssh://github@github.com/YourUsername/{0}.git`
 
 `project.cvs_viewer_type`: Which CVS viewer should CDash use. Currently the following are available: `cgit`, `cvstrac`, `fisheye`, `github`, `gitlab`, `gitorious`, `gitweb`, `gitweb2`, `hgweb`, `stash`, `loggerhead`, `p4web`, `phab_git`, `redmine`, `allura`, `trac`, `viewcvs`, `viewvc`, `viewvc_1_1`, `websvn`
 
+`project.public`: It sets the visibility of the project. Allowed: `true`, `false`.
+
 # Usage
 
 ```{python}
-usage: cdashclient [-h] --login_email LOGIN_EMAIL --login_password
-                   LOGIN_PASSWORD [--create_project]
+usage: cdashclient [-h] [--create_project]
                    [--project_name PROJECT_NAME]
                    [--project_description PROJECT_DESCRIPTION]
                    [--project_branch PROJECT_BRANCH]
@@ -69,6 +74,13 @@ The client currently supports the following operations:
 This is performed with all operations that require a login, like creating projects or listing private projects.
 Provide the user name (typically email address) and password to login.
 
+You can login in two ways:
+- by setting `cdash_login_email` and `cdash_login_password` in `.cdash-client.json` (default)
+- by adding cli arguments `--login_email <your@email.com>` for email and `--login_password <your_password>` for password
+
+Passing the login email and password directly as arguments will override whatever is
+specified in the `.cdash-client.json`
+
 ### Example
 
 ## Create new Projects
@@ -78,8 +90,7 @@ There are some hard-coded parameters that we do not need for the moment, and wil
 ### Example
 
 ```
-$ python3 -m cdash-client/cdashclient --login_email=<your@email.here> --login_password=<your-password-here> \
-    --create_project --project_name=MySpecialProject --project_branch=staging
+$ python3 -m cdash-client/cdashclient --create_project --project_name=MySpecialProject --project_branch=staging
 ```
 
 This will create a project in your CDash installation
@@ -91,8 +102,7 @@ We can get a list of currently available users, and either get their email or id
 ### Example
 
 ```
-$ python3 -m cdash-client/cdashclient --login_email=<your@email.here> --login_password=<your-password-here> \
-    --list_users_id
+$ python3 -m cdash-client/cdashclient --list_users_id
 ```
 
 > 1 2 3
@@ -108,22 +118,19 @@ It is possible to specify emails and user ids interchangeably.
 Adding a list of users to a project with the same user role for everyone.
 
 ```
-$ python3 -m cdash-client/cdashclient --login_email=<your@email.here> --login_password=<your-password-here> \
-    --add_project_users --project_id=10 --users 6 2 1 5 30 --user_roles 0
+$ python3 -m cdash-client/cdashclient --add_project_users --project_id=10 --users 6 2 1 5 30 --user_roles 0
 ```
 
 Adding a list of users to a project given its name with a role for every user
 
 ```
-$ python3 -m cdash-client/cdashclient --login_email=<your@email.here> --login_password=<your-password-here> \
-    --add_project_users --project_name=MySpecialProject --users 6 user3@email.com 1 5 user@email.com --user_roles 0 1 1 2 1
+$ python3 -m cdash-client/cdashclient --add_project_users --project_name=MySpecialProject --users 6 user3@email.com 1 5 user@email.com --user_roles 0 1 1 2 1
 ```
 
 If a user does not exist, the operation will be aborted
 
 ```
-$ python3 -m cdash-client/cdashclient --login_email=<your@email.here> --login_password=<your-password-here> \
-    --add_project_users --project_id=10 --users 50 5 user@email.com 2 1 --user_roles 0
+$ python3 -m cdash-client/cdashclient --add_project_users --project_id=10 --users 50 5 user@email.com 2 1 --user_roles 0
 ```
 > Traceback (most recent call last):
   File "/usr/lib/python3.6/runpy.py", line 193, in _run_module_as_main

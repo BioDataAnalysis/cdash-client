@@ -83,15 +83,16 @@ def add_project_users(session, args: list):
             # Currently ignored by the API, as it will not return a different status code if something went wrong
             raise Exception(f"The user {userid} could not be added to the project. Maybe it's missing?")
 
-def login():
+def login(email=None, password=None):
     session = requests.Session()
 
     response = session.get(f"{config['cdash_base_url']}/login")
 
     login_token = re.findall('<meta name="csrf-token" content="(.*)" \\/>', response.text)[0]
 
-    email = config['cdash_login_email']
-    password = config['cdash_login_password']
+    if not email and not password:
+        email = config['cdash_login_email']
+        password = config['cdash_login_password']
 
     if not email or not password:
         raise Exception("Incomplete credentials given")
