@@ -3,7 +3,7 @@ import re
 
 from .settings import config
 
-def create_project(session: requests.Session, args):
+def create_project(session, args):
     payload = {
         "Submit": True,
         "project": _args_to_project(args)
@@ -15,7 +15,7 @@ def create_project(session: requests.Session, args):
     if not project_created:
         raise Exception(f"The project {args.project_name} already exists")
 
-def get_project_id(session: requests.Session, project_name: str):
+def get_project_id(session, project_name):
     response = session.get(f"{config['cdash_api_url']}/index.php?project={project_name}")
 
     if response.status_code != 200:
@@ -27,23 +27,23 @@ def get_project_id(session: requests.Session, project_name: str):
     CDash does not offer any other way to get a list of users.
 '''
 
-def users_list(session: requests.Session):
+def users_list(session):
     response = session.get(f"{config['cdash_base_url']}/ajax/findusers.php?search=%")
     users_id = re.findall('<input name="userid" type="hidden" value="(.*)">', response.text)
     emails = re.findall('\\((.+\\@.+\\..+)\\)', response.text)
 
     return list(zip(users_id, emails))
 
-def users_email_list(session: requests.Session):
-    return [email for userid, email in users_list(session)]
+def users_email_list(session):
+    return [email for _, email in users_list(session)]
 
-def users_id_list(session: requests.Session):
-    return [userid for userid, email in users_list(session)]
+def users_id_list(session):
+    return [userid for userid, _ in users_list(session)]
 
-def users_exist(session: requests.Session, user_email: str) -> bool:
+def users_exist(session, user_email):
     return user_email in users_email_list(session)
 
-def normalize_to_user_ids(users: list, existing_users: list) -> list:
+def normalize_to_user_ids(users: list, existing_users: list):
     user_ids = []
     for item in users:
         userid = item
@@ -57,7 +57,7 @@ def normalize_to_user_ids(users: list, existing_users: list) -> list:
         user_ids.append(userid)
     return user_ids
 
-def add_project_users(session: requests.Session, args: list) -> None:
+def add_project_users(session, args: list):
     existing_users = users_list(session)
     user_ids = normalize_to_user_ids(args.users, existing_users)
     project_id = get_project_id(session, args.project_name) if args.project_name else args.project_id
@@ -83,7 +83,7 @@ def add_project_users(session: requests.Session, args: list) -> None:
             # Currently ignored by the API, as it will not return a different status code if something went wrong
             raise Exception(f"The user {userid} could not be added to the project. Maybe it's missing?")
 
-def login(email: str, password: str):
+def login(email, password):
     session = requests.Session()
 
     response = session.get(f"{config['cdash_base_url']}/login")

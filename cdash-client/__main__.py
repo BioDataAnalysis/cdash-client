@@ -1,11 +1,10 @@
 import argparse
 import sys
-import os
-from pathlib import Path
 
 from . import api
 
 def main():
+
     parser = argparse.ArgumentParser(description="Create a new CDash project")
     parser
     parser.add_argument("--login_email", type=str, help="Login email", required=True)
@@ -36,8 +35,7 @@ def main():
     session = api.login(args.login_email, args.login_password)
 
     if not session:
-        print("Error while loggin in: the credentials are wrong.")
-        exit(1)
+        sys.exit("Error while loggin in: the credentials are wrong")
 
     if args.create_project:
         api.create_project(session, args)
