@@ -146,3 +146,8 @@ $ python3 -m cdash-client/cdash-client --add_project_users --project_id=10 --use
   File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdash-client/api.py", line 55, in normalize_to_user_ids
     raise Exception(f"User '{item}' does not exist.")
 Exception: User '50' does not exist.
+
+Also note that roles are as follows:
+- 0: **Normal User**
+- 1: **Site Mantainer**
+- 2: **Project Administrator**
