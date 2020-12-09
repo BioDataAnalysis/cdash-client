@@ -8,18 +8,18 @@ def create_project(session, args):
         "Submit": True,
         "project": _args_to_project(args)
     }
-    response = session.post(f"{config['cdash_base_url']}{config['cdash_api_endpoint']}/project.php", json=payload)
+    response = session.post(config['cdash_base_url'] + config['cdash_api_endpoint'] + "/project.php", json=payload)
 
     project_created = response.status_code == 200
 
     if not project_created:
-        raise Exception(f"The project {args.project_name} already exists")
+        raise Exception("The project " + args.project_name + " already exists")
 
 def get_project_id(session, project_name):
-    response = session.get(f"{config['cdash_base_url']}{config['cdash_api_endpoint']}/index.php?project={project_name}")
+    response = session.get(config['cdash_base_url'] + config['cdash_api_endpoint'] + "/index.php?project=" + project_name)
 
-    if response.status_code != 200:
-        raise Exception(f"Could not get the data from the project {project_name}. Maybe it doesn't exist?")
+    if response.status_code != 200 or "error" in response.json():
+        raise Exception("Could not get the data from the project " + project_name + ". Maybe it doesn't exist?")
 
     return response.json()["projectid"]
 
@@ -28,7 +28,7 @@ def get_project_id(session, project_name):
 '''
 
 def users_list(session):
-    response = session.get(f"{config['cdash_base_url']}/ajax/findusers.php?search=%")
+    response = session.get(config['cdash_base_url'] + "/ajax/findusers.php?search=%")
     users_id = re.findall('<input name="userid" type="hidden" value="(.*)">', response.text)
     emails = re.findall('\\((.+\\@.+\\..+)\\)', response.text)
 
@@ -43,7 +43,7 @@ def users_id_list(session):
 def users_exist(session, user_email):
     return user_email in users_email_list(session)
 
-def normalize_to_user_ids(users: list, existing_users: list):
+def normalize_to_user_ids(users, existing_users):
     user_ids = []
     for item in users:
         userid = item
@@ -52,12 +52,12 @@ def normalize_to_user_ids(users: list, existing_users: list):
             userid = [user[0] for user in existing_users if user[1] == userid]
 
             if len(userid) == 0:
-                raise Exception(f"User '{item}' does not exist.")
+                raise Exception("User '" + item + "' does not exist.")
 
         user_ids.append(userid)
     return user_ids
 
-def add_project_users(session, args: list):
+def add_project_users(session, args):
     existing_users = users_list(session)
     user_ids = normalize_to_user_ids(args.users, existing_users)
     project_id = get_project_id(session, args.project_name) if args.project_name else args.project_id
@@ -68,25 +68,25 @@ def add_project_users(session, args: list):
         role = args.users_roles[idx] if len(args.users_roles) > 1 else args.users_roles[0]
 
         payload = {
-            "userid": userid,
+            "userid": userid[0],
             "role": role,
             "repositoryCredential": "", # TODO: figure out what this is for
             "adduser": "add user",
-            f"formuser_{userid}": ""
         }
+        payload["formuser_" + str(userid[0])] = ""
 
-        response = session.post(f"{config['cdash_base_url']}/manageProjectRoles.php?projectid={project_id}", data=payload)
+        response = session.post(config['cdash_base_url'] + "/manageProjectRoles.php?projectid=" + str(project_id), data=payload)
 
         user_added = response.status_code == 200
 
         if not user_added:
             # Currently ignored by the API, as it will not return a different status code if something went wrong
-            raise Exception(f"The user {userid} could not be added to the project. Maybe it's missing?")
+            raise Exception("The user " + userid + " could not be added to the project. Maybe it's missing?")
 
 def login(email=None, password=None):
     session = requests.Session()
 
-    response = session.get(f"{config['cdash_base_url']}/login")
+    response = session.get(config['cdash_base_url'] + "/login")
 
     login_token = re.findall('<meta name="csrf-token" content="(.*)" \\/>', response.text)[0]
 
@@ -103,7 +103,7 @@ def login(email=None, password=None):
         "_token": login_token
     }
 
-    response = session.post(f"{config['cdash_base_url']}/login", data=payload)
+    response = session.post(config['cdash_base_url'] + "/login", data=payload)
 
     if response.status_code == 401:
         raise Exception("Could not login")

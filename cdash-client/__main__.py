@@ -32,7 +32,7 @@ def main():
 
     args = parser.parse_args()
 
-    if args["login_email"] and args["login_password"]:
+    if args.login_email and args.login_password:
         session = api.login(args.login_email, args.login_password)
     else:
         session = api.login()

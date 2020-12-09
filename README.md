@@ -56,7 +56,7 @@ Example: `ssh://github@github.com/YourUsername/{0}.git`
 # Usage
 
 ```{python}
-usage: cdashclient [-h] [--create_project]
+usage: cdash-client [-h] [--create_project]
                    [--project_name PROJECT_NAME]
                    [--project_description PROJECT_DESCRIPTION]
                    [--project_branch PROJECT_BRANCH]
@@ -90,7 +90,7 @@ There are some hard-coded parameters that we do not need for the moment, and wil
 ### Example
 
 ```
-$ python3 -m cdash-client/cdashclient --create_project --project_name=MySpecialProject --project_branch=staging
+$ python3 -m cdash-client/cdash-client --create_project --project_name=MySpecialProject --project_branch=staging
 ```
 
 This will create a project in your CDash installation
@@ -102,7 +102,7 @@ We can get a list of currently available users, and either get their email or id
 ### Example
 
 ```
-$ python3 -m cdash-client/cdashclient --list_users_id
+$ python3 -m cdash-client/cdash-client --list_users_id
 ```
 
 > 1 2 3
@@ -118,31 +118,31 @@ It is possible to specify emails and user ids interchangeably.
 Adding a list of users to a project with the same user role for everyone.
 
 ```
-$ python3 -m cdash-client/cdashclient --add_project_users --project_id=10 --users 6 2 1 5 30 --user_roles 0
+$ python3 -m cdash-client/cdash-client --add_project_users --project_id=10 --users 6 2 1 5 30 --user_roles 0
 ```
 
 Adding a list of users to a project given its name with a role for every user
 
 ```
-$ python3 -m cdash-client/cdashclient --add_project_users --project_name=MySpecialProject --users 6 user3@email.com 1 5 user@email.com --user_roles 0 1 1 2 1
+$ python3 -m cdash-client/cdash-client --add_project_users --project_name=MySpecialProject --users 6 user3@email.com 1 5 user@email.com --user_roles 0 1 1 2 1
 ```
 
 If a user does not exist, the operation will be aborted
 
 ```
-$ python3 -m cdash-client/cdashclient --add_project_users --project_id=10 --users 50 5 user@email.com 2 1 --user_roles 0
+$ python3 -m cdash-client/cdash-client --add_project_users --project_id=10 --users 50 5 user@email.com 2 1 --user_roles 0
 ```
 > Traceback (most recent call last):
   File "/usr/lib/python3.6/runpy.py", line 193, in _run_module_as_main
     "__main__", mod_spec)
   File "/usr/lib/python3.6/runpy.py", line 85, in _run_code
     exec(code, run_globals)
-  File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdashclient/__main__.py", line 59, in <module>
+  File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdash-client/__main__.py", line 59, in <module>
     main()
-  File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdashclient/__main__.py", line 45, in main
+  File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdash-client/__main__.py", line 45, in main
     api.add_project_users(session, args)
-  File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdashclient/api.py", line 62, in add_project_users
+  File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdash-client/api.py", line 62, in add_project_users
     user_ids = normalize_to_user_ids(args.users, existing_users)
-  File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdashclient/api.py", line 55, in normalize_to_user_ids
+  File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdash-client/api.py", line 55, in normalize_to_user_ids
     raise Exception(f"User '{item}' does not exist.")
 Exception: User '50' does not exist.
