@@ -137,13 +137,13 @@ $ python3 -m cdash-client/cdash-client --add_project_users --project_id=10 --use
     "__main__", mod_spec)
   File "/usr/lib/python3.6/runpy.py", line 85, in _run_code
     exec(code, run_globals)
-  File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdash-client/__main__.py", line 59, in <module>
+  File "/home/acastro/BDA/Src/cdash-client/cdash-client/__main__.py", line 59, in <module>
     main()
-  File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdash-client/__main__.py", line 45, in main
+  File "/home/acastro/BDA/Src/cdash-client/cdash-client/__main__.py", line 45, in main
     api.add_project_users(session, args)
-  File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdash-client/api.py", line 62, in add_project_users
+  File "/home/acastro/BDA/Src/cdash-client/cdash-client/api.py", line 62, in add_project_users
     user_ids = normalize_to_user_ids(args.users, existing_users)
-  File "/home/acastro/BioDataAnalysis/Source/cdash-client/cdash-client/api.py", line 55, in normalize_to_user_ids
+  File "/home/acastro/BDA/Src/cdash-client/cdash-client/api.py", line 55, in normalize_to_user_ids
     raise Exception(f"User '{item}' does not exist.")
 Exception: User '50' does not exist.
 
